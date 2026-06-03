@@ -1,0 +1,8 @@
+export function AdminUsersPage() {
+  return (
+    <div>
+      <h1 className="text-2xl font-bold text-navy-900 mb-2">User management</h1>
+      <p className="text-sm text-slate-500">Placeholder — admin user management coming in future milestone.</p>
+    </div>
+  )
+}
