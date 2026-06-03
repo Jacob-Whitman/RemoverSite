@@ -1,12 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/database'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string) || 'https://placeholder.supabase.co'
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || 'placeholder-anon-key'
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY. Copy .env.example to .env.local and fill in your Supabase project values.'
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+  console.warn(
+    '[Baseline] VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is not set. ' +
+    'Auth and data features will not work. Copy .env.example to .env.local and fill in your Supabase project values.'
   )
 }
 
