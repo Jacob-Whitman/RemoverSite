@@ -50,7 +50,7 @@ export function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading }}>
+    <AuthContext.Provider value={{ user, profile, loading, refreshProfile: () => loadProfile(user?.id ?? '') }}>
       <AppRouter />
     </AuthContext.Provider>
   )

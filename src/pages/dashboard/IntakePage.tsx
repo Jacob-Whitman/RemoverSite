@@ -4,10 +4,15 @@ import { useAuth } from '../../lib/authContext'
 import { ROUTES } from '../../lib/routes'
 
 export function IntakePage() {
-  const { user } = useAuth()
+  const { user, refreshProfile } = useAuth()
   const navigate = useNavigate()
 
   if (!user) return null
+
+  async function handleSuccess() {
+    await refreshProfile()
+    navigate(ROUTES.dashboard)
+  }
 
   return (
     <div className="max-w-xl mx-auto">
@@ -19,7 +24,7 @@ export function IntakePage() {
         <IntakeForm
           user={user}
           defaultEmail={user.email ?? ''}
-          onSuccess={() => navigate(ROUTES.dashboard)}
+          onSuccess={handleSuccess}
         />
       </div>
     </div>

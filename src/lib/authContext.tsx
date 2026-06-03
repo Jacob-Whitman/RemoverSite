@@ -6,9 +6,10 @@ export interface AuthContextValue {
   user: User | null
   profile: Profile | null
   loading: boolean
+  refreshProfile: () => Promise<void>
 }
 
-export const AuthContext = createContext<AuthContextValue>({ user: null, profile: null, loading: true })
+export const AuthContext = createContext<AuthContextValue>({ user: null, profile: null, loading: true, refreshProfile: async () => {} })
 
 export function useAuth() {
   return useContext(AuthContext)
