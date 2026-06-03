@@ -29,7 +29,6 @@ export function IntakeForm({ user, defaultEmail, onSuccess }: IntakeFormProps) {
       public_facing_professional: false,
       household_removal_interest: false,
       recurring_monitoring_interest: false,
-      consent_confirmed: true,
     },
   })
 

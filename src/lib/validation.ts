@@ -34,9 +34,6 @@ export const intakeSchema = z.object({
   public_facing_professional: z.boolean().optional(),
   household_removal_interest: z.boolean().optional(),
   recurring_monitoring_interest: z.boolean().optional(),
-  consent_confirmed: z.literal(true, {
-    errorMap: () => ({ message: 'You must confirm consent to continue' }),
-  }),
 })
 
 export const consentSchema = z.object({

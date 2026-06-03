@@ -119,7 +119,7 @@ export function ConsentForm({ userId, onSuccess }: ConsentFormProps) {
                   : item.description
                 }
                 checked={!!field.value}
-                onChange={field.onChange}
+                onChange={(e) => field.onChange(e.target.checked)}
                 error={errors[item.key]?.message}
               />
             )}
@@ -142,7 +142,7 @@ export function ConsentForm({ userId, onSuccess }: ConsentFormProps) {
               label="Recurring monitoring (optional)"
               description="I consent to recurring checks to detect records that reappear after removal."
               checked={!!field.value}
-              onChange={field.onChange}
+              onChange={(e) => field.onChange(e.target.checked)}
             />
           )}
         />
