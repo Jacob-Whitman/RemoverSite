@@ -37,8 +37,7 @@ export function IntakeForm({ user, defaultEmail, onSuccess }: IntakeFormProps) {
     try {
       // Cast needed because our hand-written Database type doesn't perfectly match supabase-js generics
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const typedFrom = supabase.from as any
-      const { error: upsertError } = await typedFrom('profiles').upsert({
+      const { error: upsertError } = await (supabase as any).from('profiles').upsert({
         id: user.id,
         email: data.email,
         legal_first_name: data.legal_first_name,
