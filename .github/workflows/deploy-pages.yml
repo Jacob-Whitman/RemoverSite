@@ -52,7 +52,7 @@ jobs:
           #   domain (e.g. github.com/org/baseline-privacy-removal
           #   served at org.github.io/baseline-privacy-removal/).
           # -------------------------------------------------------
-          VITE_BASE_PATH: /RemoverSite/
+          VITE_BASE_PATH: /
           # Public Supabase values — safe to include in the frontend build
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
