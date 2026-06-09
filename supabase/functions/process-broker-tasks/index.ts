@@ -6,10 +6,11 @@
 //
 // Required Supabase secrets:
 //   RESEND_API_KEY       - Resend API key for sending email
-//   REMOVAL_EMAIL_FROM   - "From" address (e.g. "removals@yourdomain.com")
+//   REMOVAL_EMAIL_FROM   - "From" address (e.g. "removals@removals.homeplateshield.com")
 //
-// Can be called by an admin user or by a cron trigger (service role key).
-// Processes up to BATCH_SIZE tasks per invocation with a delay between requests.
+// Body params:
+//   user_id?      - scope to a single user
+//   retry_failed? - if true, also retry tasks with status = 'failed'
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
@@ -26,11 +27,10 @@ const REQUEST_DELAY_MS = 500
 
 interface AutomationConfig {
   type: 'email' | 'form'
-  // form only
   url?: string
   method?: 'POST' | 'GET'
   content_type?: string
-  fields?: Record<string, string> // formFieldName -> profileFieldName
+  fields?: Record<string, string>
 }
 
 interface BrokerRow {
@@ -40,6 +40,7 @@ interface BrokerRow {
   automation_method: string
   automation_config: AutomationConfig | null
   opt_out_url: string | null
+  requires_email_verification: boolean
 }
 
 interface TaskRow {
@@ -68,15 +69,12 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-/** Build a flat map of profile values keyed by common field name aliases */
 function buildProfileMap(p: ProfileRow): Record<string, string> {
   const map: Record<string, string> = {}
-
   const set = (value: string | null | undefined, ...keys: string[]) => {
     if (!value) return
     for (const k of keys) map[k] = value
   }
-
   set(p.legal_first_name, 'first_name', 'firstName', 'fname', 'first')
   set(p.legal_last_name, 'last_name', 'lastName', 'lname', 'last')
   set(p.legal_middle_name, 'middle_name', 'middleName', 'mname', 'middle')
@@ -84,24 +82,17 @@ function buildProfileMap(p: ProfileRow): Record<string, string> {
   set(p.current_state, 'state', 'stateCode', 'state_code')
   set(p.current_city, 'city', 'cityName', 'city_name')
   set(p.year_of_birth, 'year_of_birth', 'yearOfBirth', 'dob_year', 'birth_year')
-
   if (p.current_address) {
     set(p.current_address.street, 'street', 'streetAddress', 'address', 'address1')
     set(p.current_address.city, 'city', 'cityName')
     set(p.current_address.state, 'state', 'stateCode')
     set(p.current_address.zip, 'zip', 'zipCode', 'postal_code', 'postalCode')
   }
-
   if (p.phone_numbers?.length) {
     set(p.phone_numbers[0], 'phone', 'phoneNumber', 'phone_number', 'tel')
   }
-
-  // Full name
-  const fullName = [p.legal_first_name, p.legal_middle_name, p.legal_last_name]
-    .filter(Boolean)
-    .join(' ')
+  const fullName = [p.legal_first_name, p.legal_middle_name, p.legal_last_name].filter(Boolean).join(' ')
   if (fullName) set(fullName, 'full_name', 'fullName', 'name')
-
   return map
 }
 
@@ -126,7 +117,6 @@ async function sendOptOutEmail(
   const city = profile.current_address?.city ?? profile.current_city ?? ''
 
   const subject = `CCPA Opt-Out and Data Deletion Request — ${fullName}`
-
   const body = `To Whom It May Concern,
 
 I am writing to request the immediate deletion of all personal information your company, ${broker.name}, holds about me pursuant to the California Consumer Privacy Act (CCPA) and any other applicable state or federal privacy laws.
@@ -151,16 +141,8 @@ ${email}`
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: fromAddress,
-      to: [toAddress],
-      subject,
-      text: body,
-    }),
+    headers: { Authorization: `Bearer ${resendApiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: fromAddress, to: [toAddress], subject, text: body }),
   })
 
   if (!res.ok) {
@@ -183,46 +165,34 @@ async function submitOptOutForm(
   }
 
   const profileMap = buildProfileMap(profile)
-
-  // Map broker field names to profile values
   const formData: Record<string, string> = {}
   for (const [formField, profileField] of Object.entries(config.fields)) {
-    const value = profileMap[profileField] ?? ''
-    formData[formField] = value
+    formData[formField] = profileMap[profileField] ?? ''
   }
 
   const method = config.method ?? 'POST'
   const contentType = config.content_type ?? 'application/x-www-form-urlencoded'
-
-  let body: string | undefined
   const headers: Record<string, string> = {
     'User-Agent': 'Mozilla/5.0 (compatible; PrivacyOptOut/1.0)',
     Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
   }
 
   let url = config.url
+  let body: string | undefined
 
   if (method === 'GET') {
-    const params = new URLSearchParams(formData)
-    url = `${config.url}?${params.toString()}`
+    url = `${config.url}?${new URLSearchParams(formData).toString()}`
+  } else if (contentType === 'application/json') {
+    headers['Content-Type'] = 'application/json'
+    body = JSON.stringify(formData)
   } else {
-    if (contentType === 'application/json') {
-      headers['Content-Type'] = 'application/json'
-      body = JSON.stringify(formData)
-    } else {
-      headers['Content-Type'] = 'application/x-www-form-urlencoded'
-      body = new URLSearchParams(formData).toString()
-    }
+    headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    body = new URLSearchParams(formData).toString()
   }
 
   try {
     const res = await fetch(url, { method, headers, body })
-
-    // Many form endpoints return 200 even on redirect; treat 2xx/3xx as success
-    if (res.status >= 400) {
-      return { success: false, error: `HTTP ${res.status} from form endpoint` }
-    }
-
+    if (res.status >= 400) return { success: false, error: `HTTP ${res.status} from form endpoint` }
     return { success: true }
   } catch (err) {
     return { success: false, error: String(err) }
@@ -243,52 +213,36 @@ serve(async (req: Request) => {
     const resendApiKey = Deno.env.get('RESEND_API_KEY') ?? ''
     const fromAddress = Deno.env.get('REMOVAL_EMAIL_FROM') ?? ''
 
-    // Auth: accept either a user JWT (admin only) or service role key directly
     const authHeader = req.headers.get('Authorization') ?? ''
     const serviceClient = createClient(supabaseUrl, serviceRoleKey)
 
-    let callerIsAdmin = false
-    let filterUserId: string | null = null
-
-    if (authHeader.startsWith('Bearer ')) {
-      const token = authHeader.slice(7)
-
-      // If caller passes the service role key directly, treat as admin
-      if (token === serviceRoleKey) {
-        callerIsAdmin = true
-      } else {
-        // Verify as user JWT
-        const userClient = createClient(supabaseUrl, anonKey, {
-          global: { headers: { Authorization: authHeader } },
-        })
-        const { data: { user }, error: authError } = await userClient.auth.getUser()
-
-        if (authError || !user) {
-          return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS_HEADERS })
-        }
-
-        // Only admins can trigger batch processing
-        const { data: profile } = await serviceClient
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .maybeSingle()
-
-        if (profile?.role !== 'admin') {
-          return Response.json({ error: 'Forbidden — admin only' }, { status: 403, headers: CORS_HEADERS })
-        }
-
-        callerIsAdmin = true
-      }
-    } else {
+    if (!authHeader.startsWith('Bearer ')) {
       return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS_HEADERS })
     }
 
-    // Optional: scope to a single user
-    const body = await req.json().catch(() => ({}))
-    if (body.user_id) filterUserId = body.user_id
+    const token = authHeader.slice(7)
+    if (token !== serviceRoleKey) {
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      })
+      const { data: { user }, error: authError } = await userClient.auth.getUser()
+      if (authError || !user) {
+        return Response.json({ error: 'Unauthorized' }, { status: 401, headers: CORS_HEADERS })
+      }
+      const { data: profile } = await serviceClient
+        .from('profiles').select('role').eq('id', user.id).maybeSingle()
+      if (profile?.role !== 'admin') {
+        return Response.json({ error: 'Forbidden — admin only' }, { status: 403, headers: CORS_HEADERS })
+      }
+    }
 
-    // Fetch pending tasks for automatable brokers
+    const body = await req.json().catch(() => ({}))
+    const filterUserId: string | null = body.user_id ?? null
+    const retryFailed: boolean = body.retry_failed === true
+
+    // Build status filter: always include not_started, optionally also failed
+    const statusFilter = retryFailed ? ['not_started', 'failed'] : ['not_started']
+
     let taskQuery = serviceClient
       .from('broker_tasks')
       .select(`
@@ -301,20 +255,16 @@ serve(async (req: Request) => {
           source_reference,
           automation_method,
           automation_config,
-          opt_out_url
+          opt_out_url,
+          requires_email_verification
         )
       `)
-      .eq('status', 'not_started')
-      .eq('brokers.supports_automation', true)
-      .not('brokers.automation_method', 'eq', '')
+      .in('status', statusFilter)
       .limit(BATCH_SIZE)
 
-    if (filterUserId) {
-      taskQuery = taskQuery.eq('user_id', filterUserId)
-    }
+    if (filterUserId) taskQuery = taskQuery.eq('user_id', filterUserId)
 
     const { data: tasks, error: taskError } = await taskQuery
-
     if (taskError) throw taskError
 
     if (!tasks || tasks.length === 0) {
@@ -325,20 +275,20 @@ serve(async (req: Request) => {
       processed: 0,
       email_sent: 0,
       form_submitted: 0,
+      waiting_user_action: 0,
       skipped_no_consent: 0,
       failed: 0,
       errors: [] as Array<{ task_id: string; broker: string; error: string }>,
     }
 
-    // Cache profiles and consent checks per user to avoid redundant DB calls
     const profileCache: Record<string, ProfileRow | null> = {}
     const consentCache: Record<string, boolean> = {}
 
     for (const task of tasks as TaskRow[]) {
       const broker = task.broker
-      if (!broker) continue
+      if (!broker || !broker.automation_method) continue
 
-      // Check consent (cached per user)
+      // Check consent
       if (!(task.user_id in consentCache)) {
         const { data: consent } = await serviceClient
           .from('consent_records')
@@ -350,24 +300,17 @@ serve(async (req: Request) => {
           .maybeSingle()
         consentCache[task.user_id] = !!consent
       }
+      if (!consentCache[task.user_id]) { results.skipped_no_consent++; continue }
 
-      if (!consentCache[task.user_id]) {
-        results.skipped_no_consent++
-        continue
-      }
-
-      // Fetch profile (cached per user)
+      // Fetch profile
       if (!(task.user_id in profileCache)) {
         const { data: p } = await serviceClient
           .from('profiles')
-          .select(
-            'email, legal_first_name, legal_middle_name, legal_last_name, current_city, current_state, current_address, year_of_birth, phone_numbers, aliases',
-          )
+          .select('email, legal_first_name, legal_middle_name, legal_last_name, current_city, current_state, current_address, year_of_birth, phone_numbers, aliases')
           .eq('id', task.user_id)
           .maybeSingle()
         profileCache[task.user_id] = p ?? null
       }
-
       const profile = profileCache[task.user_id]
       if (!profile) {
         results.failed++
@@ -375,42 +318,56 @@ serve(async (req: Request) => {
         continue
       }
 
-      // Process based on automation method
+      // Submit
       let outcome: { success: boolean; error?: string }
-
       if (broker.automation_method === 'email') {
-        if (!resendApiKey) {
-          outcome = { success: false, error: 'RESEND_API_KEY not configured' }
-        } else {
-          outcome = await sendOptOutEmail(resendApiKey, fromAddress, broker, profile)
-        }
+        outcome = resendApiKey
+          ? await sendOptOutEmail(resendApiKey, fromAddress, broker, profile)
+          : { success: false, error: 'RESEND_API_KEY not configured' }
       } else if (broker.automation_method === 'form_submit') {
         outcome = await submitOptOutForm(broker, profile)
       } else {
         outcome = { success: false, error: `Unknown automation_method: ${broker.automation_method}` }
       }
 
-      // Update task status
       const now = new Date().toISOString()
-      const updatePayload = outcome.success
-        ? {
-            status: 'submitted' as const,
+
+      let updatePayload: Record<string, unknown>
+      if (outcome.success) {
+        // If the broker sends a confirmation email to the user, they need to act on it
+        if (broker.requires_email_verification) {
+          updatePayload = {
+            status: 'waiting_user_action',
             submitted_at: now,
             last_checked_at: now,
             failure_reason: null,
+            requires_user_action: true,
+            user_action_type: 'Check your email and click the confirmation link sent by ' + broker.name + ' to complete your removal request.',
           }
-        : {
-            status: 'failed' as const,
+          results.waiting_user_action++
+        } else {
+          updatePayload = {
+            status: 'submitted',
+            submitted_at: now,
             last_checked_at: now,
-            failure_reason: outcome.error ?? 'Unknown error',
+            failure_reason: null,
+            requires_user_action: false,
           }
+          if (broker.automation_method === 'email') results.email_sent++
+          else results.form_submitted++
+        }
+      } else {
+        updatePayload = {
+          status: 'failed',
+          last_checked_at: now,
+          failure_reason: outcome.error ?? 'Unknown error',
+        }
+        results.failed++
+        results.errors.push({ task_id: task.id, broker: broker.name, error: outcome.error ?? 'Unknown' })
+      }
 
-      await serviceClient
-        .from('broker_tasks')
-        .update(updatePayload)
-        .eq('id', task.id)
+      await serviceClient.from('broker_tasks').update(updatePayload).eq('id', task.id)
 
-      // Log activity
       await serviceClient.from('activity_logs').insert({
         user_id: task.user_id,
         actor_type: 'edge_function',
@@ -422,20 +379,12 @@ serve(async (req: Request) => {
           broker_id: broker.id,
           broker_name: broker.name,
           automation_method: broker.automation_method,
+          requires_email_verification: broker.requires_email_verification,
           ...(outcome.error ? { error: outcome.error } : {}),
         },
       })
 
       results.processed++
-      if (outcome.success) {
-        if (broker.automation_method === 'email') results.email_sent++
-        else results.form_submitted++
-      } else {
-        results.failed++
-        results.errors.push({ task_id: task.id, broker: broker.name, error: outcome.error ?? 'Unknown' })
-      }
-
-      // Throttle between requests
       await sleep(REQUEST_DELAY_MS)
     }
 

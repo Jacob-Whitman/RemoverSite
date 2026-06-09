@@ -84,6 +84,13 @@ export function DashboardPage() {
         </Alert>
       )}
 
+      {tasks.some(t => t.status === 'waiting_user_action') && (
+        <Alert variant="warning" title="Action required on some brokers">
+          One or more data brokers sent a confirmation email to your inbox. You need to click the link in that email to complete your removal request.{' '}
+          <Link to={ROUTES.dashboardBrokers} className="font-medium underline">View affected brokers →</Link>
+        </Alert>
+      )}
+
       <DashboardSummaryCards data={tasks.length > 0 ? summary : EMPTY_SUMMARY} />
 
       <div className="flex items-center justify-between mt-6">

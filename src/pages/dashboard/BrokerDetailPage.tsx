@@ -59,7 +59,7 @@ export function BrokerDetailPage() {
 
         {task.requires_user_action && task.user_action_type && (
           <div className="mt-4 pt-4 border-t border-slate-200">
-            <Alert variant="warning" title="Action needed">
+            <Alert variant="warning" title="Action needed — check your email">
               {task.user_action_type}
             </Alert>
           </div>
