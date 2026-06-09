@@ -12,12 +12,16 @@ export function IntakePage() {
 
   async function handleSuccess() {
     await refreshProfile()
-    // Create broker task rows for this user so the nightly bot has work to do.
-    // Errors are non-fatal — tasks can also be created by an admin later.
     try {
+      // Create broker task rows first (must complete before processing)
       await supabase.functions.invoke('create-broker-tasks')
+      // Fire the bot for this user without awaiting — it runs in the background
+      // while the user is redirected to the dashboard. Processes all tasks at once.
+      supabase.functions.invoke('process-broker-tasks', {
+        body: { user_id: user!.id },
+      })
     } catch {
-      // ignore — tasks will be created on next admin sync
+      // Non-fatal — nightly cron will pick up any unprocessed tasks
     }
     navigate(ROUTES.dashboard)
   }

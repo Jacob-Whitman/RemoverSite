@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { StatusBadge } from '../../components/dashboard/StatusBadge'
 import { Card } from '../../components/ui/Card'
 import { Alert } from '../../components/ui/Alert'
+import { Button } from '../../components/ui/Button'
 import { useAuth } from '../../lib/authContext'
 import { supabase } from '../../lib/supabaseClient'
 import { ROUTES } from '../../lib/routes'
@@ -13,6 +14,8 @@ export function BrokerDetailPage() {
   const { user } = useAuth()
   const [task, setTask] = useState<BrokerTask | null>(null)
   const [loading, setLoading] = useState(true)
+  const [acknowledging, setAcknowledging] = useState(false)
+  const [ackError, setAckError] = useState('')
 
   useEffect(() => {
     if (!user || !id) return
@@ -27,6 +30,34 @@ export function BrokerDetailPage() {
         setLoading(false)
       })
   }, [user, id])
+
+  async function acknowledgeAction() {
+    if (!task) return
+    setAcknowledging(true)
+    setAckError('')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any)
+      .from('broker_tasks')
+      .update({
+        status: 'waiting_broker_response',
+        requires_user_action: false,
+        last_checked_at: new Date().toISOString(),
+      })
+      .eq('id', task.id)
+
+    if (error) {
+      setAckError('Could not update status. Please try again.')
+      setAcknowledging(false)
+      return
+    }
+
+    setTask(prev => prev ? {
+      ...prev,
+      status: 'waiting_broker_response',
+      requires_user_action: false,
+    } : null)
+    setAcknowledging(false)
+  }
 
   if (loading) return <div className="text-sm text-slate-500">Loading…</div>
   if (!task) return (
@@ -58,10 +89,19 @@ export function BrokerDetailPage() {
         </dl>
 
         {task.requires_user_action && task.user_action_type && (
-          <div className="mt-4 pt-4 border-t border-slate-200">
+          <div className="mt-4 pt-4 border-t border-slate-200 space-y-3">
             <Alert variant="warning" title="Action needed — check your email">
               {task.user_action_type}
             </Alert>
+            {ackError && <Alert variant="danger">{ackError}</Alert>}
+            <Button
+              size="sm"
+              variant="outline"
+              loading={acknowledging}
+              onClick={acknowledgeAction}
+            >
+              I've clicked the confirmation link
+            </Button>
           </div>
         )}
 

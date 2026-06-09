@@ -243,6 +243,10 @@ serve(async (req: Request) => {
     // Build status filter: always include not_started, optionally also failed
     const statusFilter = retryFailed ? ['not_started', 'failed'] : ['not_started']
 
+    // When scoped to a single user (e.g. right after intake), process all their
+    // tasks in one shot. For global cron runs, cap at BATCH_SIZE to avoid timeouts.
+    const limit = filterUserId ? 200 : BATCH_SIZE
+
     let taskQuery = serviceClient
       .from('broker_tasks')
       .select(`
@@ -260,7 +264,7 @@ serve(async (req: Request) => {
         )
       `)
       .in('status', statusFilter)
-      .limit(BATCH_SIZE)
+      .limit(limit)
 
     if (filterUserId) taskQuery = taskQuery.eq('user_id', filterUserId)
 
