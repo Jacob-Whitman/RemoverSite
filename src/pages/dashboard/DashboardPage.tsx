@@ -21,20 +21,30 @@ export function DashboardPage() {
   const [tasks, setTasks] = useState<BrokerTask[]>([])
   const [loading, setLoading] = useState(true)
 
+  const [consentGiven, setConsentGiven] = useState(true)
   const profileComplete = !!(profile?.legal_first_name && profile?.legal_last_name && profile?.current_state)
-  const consentGiven = true // TODO: check consent_records table
 
   useEffect(() => {
     if (!user) return
-    supabase
-      .from('broker_tasks')
-      .select('*, broker:brokers(*)')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: true })
-      .then(({ data }) => {
-        setTasks((data as BrokerTask[]) ?? [])
-        setLoading(false)
-      })
+    Promise.all([
+      supabase
+        .from('broker_tasks')
+        .select('*, broker:brokers(*)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: true }),
+      supabase
+        .from('consent_records')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('consent_type', 'submit_opt_out_requests')
+        .eq('consent_given', true)
+        .is('revoked_at', null)
+        .maybeSingle(),
+    ]).then(([taskRes, consentRes]) => {
+      setTasks((taskRes.data as BrokerTask[]) ?? [])
+      setConsentGiven(!!consentRes.data)
+      setLoading(false)
+    })
   }, [user])
 
   const summary = {

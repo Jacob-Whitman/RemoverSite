@@ -1,0 +1,524 @@
+DATA BROKER NAMES
+Sources: github.com/digisamroc/eraser + github.com/yaelwrites/big-ass-data-broker-opt-out-list (BADBOOL)
+Compiled: 2026-06-09
+Total: 490+ brokers
+================================================================================
+
+PEOPLE-SEARCH & BACKGROUND-CHECK SITES
+(Directly expose addresses, phone numbers, relatives, employers)
+-----------------------------------------------------------------------
+Spokeo
+BeenVerified
+Whitepages
+Intelius
+TruePeopleSearch
+FastPeopleSearch
+USPhoneBook
+ThatsThem
+Instant Checkmate
+TruthFinder
+MyLife
+Pipl
+ZabaSearch
+PublicRecordsNow
+FamilyTreeNow
+Addresses.com
+AdvancedBackgroundChecks
+PublicRecords360
+SearchPeopleFree
+Nuwber
+PeopleSmart
+USSearch
+NeighborWho
+Centeda
+IDTrue
+CheckPeople
+ClustrMaps
+Radaris
+SmartBackgroundChecks
+411.com
+Cyber Background Checks
+Facecheck ID
+FamilySearch
+FreePeopleDirectory
+InfoTracer
+National Public Data
+NeighborReport
+PeopleByName
+PeopleSearchNow
+PimEyes
+PrivateEye
+Private Records
+PropertyRecs
+Rehold
+Searchbug
+SearchPeopleFree
+SearchQuarry
+Social Catfish
+SpyFly
+TruePeopleSearch.net
+United States Phone Book
+UnMask
+USA People Search
+Veripages
+VoterRecords
+ZoomInfo
+LexisNexis Risk Solutions
+Archives.com
+Classmates.com
+FreePeopleDirectory
+Men Stopping Violence
+
+GENEALOGY SITES
+-----------------------------------------------------------------------
+Ancestry.com
+FamilySearch
+FamilyTreeNow
+
+FACIAL RECOGNITION
+-----------------------------------------------------------------------
+PimEyes
+Facecheck ID
+Clearview AI
+
+BACKGROUND CHECK COMPANIES
+-----------------------------------------------------------------------
+Checkr
+GoodHire
+Sterling
+HireRight
+ACUTRAQ Background Screening, Inc.
+Background Information Services, Inc.
+IQ Data Systems, Inc. (Backgrounds Online)
+General Information Solutions LLC (BackgroundChecks.com)
+Intelius (background-check division)
+Cyber Background Checks
+AdvancedBackgroundChecks
+SmartBackgroundChecks
+LexisNexis Risk Solutions
+Intellicorp Records, Inc.
+InfoTracer
+
+MAJOR MARKETING DATA BROKERS
+(Aggregate and supply data to downstream people-search sites)
+-----------------------------------------------------------------------
+Acxiom (ACXIOM LLC)
+Epsilon Data Management (EPSILON DATA MANAGEMENT LLC)
+Experian Marketing Services (Experian Data Corp)
+Equifax Marketing Services
+TransUnion Marketing
+LiveRamp (Liveramp, Inc.)
+Nielsen
+CoreLogic
+Tapad (Experian)
+Lotame
+TowerData (ATDATA LLC)
+
+MARKETING & AD-TECH DATA BROKERS (from eraser database)
+-----------------------------------------------------------------------
+01Advertising Inc.
+180 By Two, LLC
+33ACROSS Inc
+4C Insights Inc.
+4Eyes.Ai, Inc.
+4Legalleads
+6SENSE INSIGHTS Inc
+Open Dealer Exchange, LLC (700Credit)
+Above Data, Inc.
+Accenture LLP
+Accurate Append Inc.
+ACE Agents Inc.
+ACRONYMIX LLC
+Activimpact, LLC
+Acuant, Inc. (IDology)
+Adadapted Inc.
+Address Clearing House
+Adept Id, Inc.
+Adrea Rubin Marketing, Inc.
+Adsquare GmbH
+Advantage Credit, Inc.
+Advantage Sales & Marketing LLC (Take5)
+Advisortarget, LLC (Finsum)
+AFFINITY ANSWERS CORPORATION
+Affinity Solutions Inc.
+AGR Marketing Solutions LLC
+Aidentified, Inc.
+AIS Portfolio Services LLC
+ALC LLC (Belardi Wong)
+Alikeaudience, Inc.
+All Global Resources, LLC (Executive Energy)
+All Good Media LLC (Attribits)
+Alliant Cooperative Data Solutions LLC
+Alphonso Inc. (LG Ads)
+Altair Data Resources, Inc.
+Altisource Holdings, LLC
+American City Business Journals, Inc.
+Amerilist Inc
+AnalyticsIQ, Inc.
+Andrews Wharton, Inc.
+Anexinet Corp.
+Anne Lewis Strategies, LLC (MissionWired)
+Anteriad
+Apihub, Inc. (Clearbit)
+APOLLO INTERACTIVE LLC
+Appscience
+ARISTOTLE INTERNATIONAL Inc
+Arity 875, LLC
+Arrakis Technologies Corp.
+AMERICAN SPIRIT DATA SOLUTIONS LLC (Aspire North)
+Asset International, Inc. (ISS Governance)
+Assurance Iq, Inc.
+Astoria Company Marketing LLC
+ATDATA LLC
+Atlantic Fox Technologies, Inc.
+ATTOM Data Solutions LLC
+Audience Acuity LLC
+Audiencerate Ltd
+PREDICTIVE POP Inc (Audigent)
+Automotive Mastermind
+Autoweb, Inc.
+All Web Leads, Inc
+33 MILE RADIUS LLC (Remodeling.com)
+Azerion US Inc. (Hybrid Theory)
+AZIRA LLC
+BB Direct, Inc
+Bdex, LLC
+BDO USA, LLP
+Beenverified, Inc. (CCPA listing)
+Beeswax (Bidr)
+Best Pick Reports, LLC
+PUBLICNSA LLC (BigDBM)
+Biointelli Corporation
+Birchwood Credit Services Inc
+Biscred
+Black Pearl Group Limited
+Bliss Point Media, Inc.
+Blis USA, Inc.
+Blue Action
+Blue Hill Marketing Solutions, Inc. (LiftBase)
+Bombora, Inc
+A DIRECT MARKETING Inc (BookYourData)
+Business Resource Center LLC
+Bridge (The Bridge Corp)
+Bridgevine Inc.
+Brightcheck Inc.
+Brigthswipe Inc
+Brooks Integrated Marketing, LLC
+BTRS Holdings Inc (Billtrust)
+Buildertrend Solutions, Inc.
+Business.Com
+Buxton Company, LLC
+Buyerlink Inc.
+BV Insights LLC (Big Village)
+Cadent, LLC
+Captify Technologies
+CARCO Group, Inc. (Cisive)
+CARDLYTICS Inc (Bridg)
+Careerbuilder, LLC
+Car Market Solutions LLC
+Carry Technologies, Inc (Hightouch)
+Catalina Marketing Corporation
+Catalist LLC
+Catalyze Ai, Inc
+CDK Global, LLC
+Censia, Inc.
+Checkpeople, LLC (CCPA listing)
+CHOREOGRAPH LLC
+CIC Mortgage Credit, Inc
+Runtime Collective LLC (Cision)
+Civil Data Research, LLC (SearchPublicRecords)
+Civis Analytics, Inc
+Civitech
+CLARITAS LLC
+Clay Labs LLC
+Clearcompany, LLC
+Clearview Ai, Inc.
+DATANYZE LLC (Clickagy)
+Cognism Inc.
+Collateral Analytics, LLC (ICE Mortgage)
+Collective Data Solutions, LLC
+Command Precision Inc. (Intentwave)
+COMMERCIAL REAL ESTATE EXCHANGE Inc (Crexi)
+Complementics
+Complete Mailing Lists
+COMPLETE MEDICAL LISTS Inc
+Comscore, Inc.
+Connect Computer LLC (CallTruth)
+Connected Investors LLC
+Connext Digital, LLC
+Consider, Inc.
+Consolidated Information Services Solutions LLC (UniversalCIS)
+CONSUMER CANVAS LLC
+Contactout
+CONTEMPORARY INFORMATION CORP. (CICReports)
+Contentgine Inc.
+Converge Direct, LLC.
+CONVEX LABS LLC
+Costar Group
+Crawlbee Corp
+Credit Bureau Of Council Bluffs, Inc (CreditInfoSystems)
+CRISIL Irevna US LLC (Greenwich Associates)
+Cross Pixel Media, Inc.
+Crosswalk Technologies Inc
+Crunchbase Inc
+CTAM Leadshare Corp. (SmartMove)
+Cuebiq Group, LLC
+Cybba Inc.
+Cyndx Networks LLC
+Data Axle, Inc.
+Data Decisions Group, LLC
+Datadelivers LLC
+Datadojo CDP Inc.
+Data Facts, Inc.
+Datafy LLC
+DATALINE Inc
+Data Marketing Solutions, Inc. (BusinessWatchNetwork)
+DATAMENTORS LLC (Porch Group Media)
+Deluxe Corporation
+DATA PARTNERS Inc
+Dataskip
+DATASYS GROUP Inc
+Corelogic Credco of Puerto Rico (Teletrack)
+Datonics, LLC
+David Rickenbacher (DataMasters)
+DEALERDIRECT LLC (FordDirect)
+Dealersocket, LLC (Solera)
+Decide Technologies Inc.
+DECISIONLINKS LLC
+Deep Root Analytics, LLC
+Deeptrace Inc. (CoreSignal)
+Delivr.Ai Inc
+Deloitte Consulting LLP
+Demandbase
+Demand Science Group, LLC
+Demyst Data, Ltd
+Diablo Media
+Dice Career Solutions, Inc.
+Digicenter, LLC.
+Digital Media Solutions, LLC
+Digital Safety Products, LLC (SpyFly)
+DIGITAL SEGMENT LLC
+DIGITAL VIKING MEDIA Inc
+Diligent Corporation
+DIRECT MARKETING SOLUTIONS Inc
+Disco Technology Inc.
+Distribution Processing Center LLC
+Dresdendirect
+Driveniq Corporation
+Drobu Media LLC
+Dspolitical, LLC (WinWithOptimal)
+Dstillery, Inc
+DT Client Services, LLC (The Data Trust)
+DTN LLC
+Dynata, LLC
+Early Warning Services, LLC
+ECONOMIC MODELING LLC (Lightcast)
+Edvisors Network, Inc.
+Effyis, Inc. (SocialGist)
+Efunds Corporation (FIS/WorldPay/ChexSystems)
+Ekata, Inc. (Mastercard)
+Electronic Commerce A To Z
+ELECTRONIC VOICE SERVICES Inc (TelephoneLists.biz)
+EL Toro.Com, LLC
+Email Marketing Services, Inc (ListMatch)
+Emailmovers Ltd
+EMERGES.COM INCORPORATED
+Endgame Labs, Inc
+Enformion LLC
+ENIGMA TECHNOLOGIES Inc
+Eprodirect
+EPSILON DATA MANAGEMENT LLC (PublicisResources)
+Equimine (PropStream)
+Erepublic LLC
+Evorra Ltd
+Consumerbase LLC (ExactData)
+Experian Data Corp (ClarityServices)
+EXPLORIUM Inc
+Exponential Interactive, Inc. (VDX.tv)
+Eyeota Pte Ltd
+Factori Technologies LLC
+Fair Screen, Inc.
+FAMILY TREE NOW LLC (USPhoneBook/Zendesk)
+Famous Birthdays, LLC
+Fanspoko, LLC (FantasySportsKnockout)
+Faraday, Inc.
+Fideo Intelligence, Inc.
+Fifty Technology Ltd
+Findem, Inc.
+First American Data Tree LLC (DataTree)
+First Direct, Inc
+First Movers Advantage, LLC
+First Orion, Inc.
+Stefan Certic (FlashIntel)
+Focus USA, Inc.
+FOO MONK LLC (Instantly.ai)
+Forager.Ai, LLC
+FOREWARN LLC
+Fourleaf LLC (FourLeafData)
+Foursquare Labs, Inc.
+Fourthwall Media, Inc.
+Fraiser, LLC
+FREE DATA SERVICES LLC (TruePeopleSearch)
+Freemium Data Services, LLC (ReachData)
+Freepeoplesearch.Com, LLC
+Freewheel Media Inc
+Freshaddress, LLC (AtData)
+Fullcontact, Inc.
+Fused Leads, LLC
+Fushia Media, LLC.
+Fyllo (Semasio)
+G2 Bankruptcy Risk Solutions, Inc.
+CENGAGE LEARNING Inc
+GETEMAILS LLC (Retention.com)
+Giant Partners
+Glad I Know, Inc.
+Good Boy Studios, Inc (Parade.pet)
+Granite Lists, LLC
+Grassroots Analytics
+Grata Inc
+Gravy Analytics, Inc. (Unacast)
+Grayhair Software LLC
+GREAT LAKES LIST Inc
+Greenhouse Software, Inc.
+Grin Technologies Inc.
+Growbots Inc
+GUIDESTAR DIRECT CORP (CarneyDirect)
+Gumgum, Inc.
+Gunderson Direct
+H1 Insights Inc.
+Hamza Online Services, LLC
+Harmon Research Group, LLC
+HD INFORMATION LLC (HygenicsData)
+Healthcare, Inc.
+Health Is Wealth Marketing LLC (PickMedicare)
+Healthlink Dimensions, LLC
+Healthwise Data, LLC
+HEARTBEAT.AI Inc (Swordfish.ai)
+Helix Campaigns LLC
+HERE North America LLC
+Hexasoft Development Sdn. Bhd. (IP2Location)
+General Information Solutions LLC (BackgroundChecks.com)
+HIRETEAMMATE Inc (HireEZ)
+Hivestack, Inc.
+Home Contractors Review, LLC (FiveStarRated)
+ACCUDATA INTEGRATED Marketing, Inc. (ASL Marketing)
+Homeowners Marketing Services Inc
+Hubspot, Inc.
+Hunt Club Inc (ExploreAtlas)
+Hunter Web Services Inc (Hunter.io)
+Hybrid Theory
+I360, LLC
+ID5 Technology
+Idengine LLC
+Idm, Inc.
+Ileads.Com, LLC
+Illumin Inc. (AcuityAds)
+Imprint Analytics LLC
+Inbound Insight, LLC
+Incheck Inc
+Indiemark LLC (EmailIndustries)
+Infinite Knot Inc. (Contacts411)
+Infinite Media Concepts Inc
+Inflection Risk Solutions, LLC
+Infocore Inc.
+Infofree.Com LLC (DatabaseUSA)
+Infogroup Inc. (Data-Axle)
+INFOMATICS LLC (PrivateReports.com)
+INFOPAY Inc
+Information.Com, LLC
+Information Data Resources, LLC (PublicInfoServices)
+Infutor Data Solutions LLC (RUF)
+Inmarket Media LLC
+Inmobi (TruFactor)
+Innovative Database Solutions, Inc.
+Innovis Data Solutions, Inc.
+InsideView, Inc.
+Insightbridge LLC (MyLife)
+Intalytics, Inc. (Kalibrate)
+Integrated Medical Data, LLC.
+INTELIUS LLC (CCPA listing)
+Intellicorp Records, Inc.
+Intentgine Inc.
+Intent IQ LLC
+Intentmacro Inc.
+INTENTSIFY LLC
+INTERACTIVE DATA LLC (IDI Data)
+IHS Markit (Ipreo)
+Ipsos
+IQ Data Systems, Inc. (BackgroundsOnline)
+IQVIA Digital Inc.
+Irys
+ISO Services Inc (Jornaya/Verisk)
+Ispot.Tv
+Ivy Tech Re, LLC (GetIvyData)
+Iwave Information Systems (Kindsight)
+J2 MARTECH CORP (ZiffDavis)
+JDM List Services, LLC
+JD Power
+Jigyasa Analytics LLC
+JMR Media Consulting, Inc.
+Jun Group Productions, LLC
+Jverify, Inc.
+Kargo Global LLC
+KBM GROUP LLC (WundermanData)
+KB Synergy Inc
+Key Marketing Advantage, LLC
+Killi Ltd.
+Klarifi
+KLOUDEND Inc (IPAPI)
+Knower Tech Usa, LLC
+Knowwho
+KOCHAVA Inc.
+Koddi Inc.
+Kols (Key Opinion Leaders)
+Komodo Health, Inc.
+Kontext (KontextData)
+Kyber Health Data LLC (Cowen)
+LABELS & LISTS Inc (L2 Political)
+Lead411 Corporation
+Leadcrunch (GetRev.ai)
+Leadership Connect
+LEADIQ Inc
+Leadloft Inc.
+LEAD ME MEDIA LLC
+Leadpost, LLC
+Leadsmarket.Com LLC
+Leadspace, Inc.
+Leidos Digital Solutions, Inc.
+Anchor Computer (LCI Inc)
+LET IT RIDE SPORTS LLC (OutlastDFS)
+Lifesight LLC
+Lightbox Parent, L.P. (LightboxRE)
+Lighthouse List (Stirista)
+Limeleads
+Lionshare Marketing, Inc.
+Listings, Information, Systems And Tabulation Services, Inc (Lists-Inc)
+List Service Direct Inc.
+Listsonline
+Live Data Technologies Inc.
+LiveIntent (Disqus)
+Liveramp, Inc.
+Lizdev, Inc
+Localblox
+Locatesmarter, LLC
+Logiq, Inc
+Lookify
+LOOPME LTD
+Lotadata, Inc.
+L.S Mobile Apps Holdings Ltd
+Lucid Holdings, LLC
+Lundquist Consulting, Inc. (G2 Risk Solutions)
+Lusha Systems, Inc.
+
+ADDITIONAL FROM BADBOOL NOT IN ERASER LIST
+-----------------------------------------------------------------------
+Men Stopping Violence (people-search)
+Clustal (clustal.org, people-search)
+PublicRecordsNow
+PublicRecords360
+EMERGES.COM (public records)
+Classmates.com
+Private Reports (privatereports.com)
+SearchPublicRecords (Civil Data Research)
+PublicInfoServices (Information Data Resources)
+PrivateRecords (privaterecords.net)
