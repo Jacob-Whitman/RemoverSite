@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { US_STATES } from './constants'
 
-export const emailSchema = z.string().trim().email('Please enter a valid email address')
+export const emailSchema = z.string().trim().min(1, 'Email is required').email('Please enter a valid email address')
 
 export const signupSchema = z.object({
   email: emailSchema,

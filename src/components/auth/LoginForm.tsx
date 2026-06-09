@@ -15,6 +15,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [error, setError] = useState('')
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: 'onChange',
   })
 
   async function onSubmit(data: LoginFormData) {
