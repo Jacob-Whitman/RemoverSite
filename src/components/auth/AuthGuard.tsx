@@ -30,7 +30,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
   }
 
   // Don't redirect if the user is already on an onboarding page.
-  if (!ONBOARDING_PATHS.includes(location.pathname)) {
+  if (!(ONBOARDING_PATHS as string[]).includes(location.pathname)) {
     if (!hasConsent) {
       return <Navigate to={ROUTES.dashboardConsent} replace />
     }
