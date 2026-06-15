@@ -1,9 +1,12 @@
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { PublicLayout } from '../components/layout/PublicLayout'
 import { DashboardLayout } from '../components/layout/DashboardLayout'
 import { AdminLayout } from '../components/layout/AdminLayout'
 import { AuthGuard } from '../components/auth/AuthGuard'
 import { AdminGuard } from '../components/auth/AdminGuard'
+import { useAuth } from '../lib/authContext'
+import { ROUTES } from '../lib/routes'
 
 // Public pages
 import { HomePage } from '../pages/public/HomePage'
@@ -20,6 +23,8 @@ import { ContactPage } from '../pages/public/ContactPage'
 // Auth pages
 import { LoginPage } from '../pages/auth/LoginPage'
 import { SignupPage } from '../pages/auth/SignupPage'
+import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage'
+import { ResetPasswordPage } from '../pages/auth/ResetPasswordPage'
 
 // Dashboard pages
 import { DashboardPage } from '../pages/dashboard/DashboardPage'
@@ -38,9 +43,22 @@ import { AdminTasksPage } from '../pages/admin/AdminTasksPage'
 import { AdminUsersPage } from '../pages/admin/AdminUsersPage'
 import { AdminReportsPage } from '../pages/admin/AdminReportsPage'
 
+// Watches for the PASSWORD_RECOVERY auth event (fired when a user lands via a
+// reset email link) and navigates to /reset-password. Must live inside the
+// Router so it has access to useNavigate.
+function RecoveryRedirect() {
+  const { recoveryMode } = useAuth()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (recoveryMode) navigate(ROUTES.resetPassword, { replace: true })
+  }, [recoveryMode, navigate])
+  return null
+}
+
 export function AppRouter() {
   return (
     <HashRouter>
+      <RecoveryRedirect />
       <Routes>
         {/* Public */}
         <Route element={<PublicLayout />}>
@@ -56,6 +74,8 @@ export function AppRouter() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
         </Route>
 
         {/* Protected dashboard */}

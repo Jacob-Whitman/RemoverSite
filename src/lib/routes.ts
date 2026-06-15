@@ -11,6 +11,8 @@ export const ROUTES = {
   contact: '/contact',
   login: '/login',
   signup: '/signup',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password',
 
   dashboard: '/dashboard',
   dashboardIntake: '/dashboard/intake',

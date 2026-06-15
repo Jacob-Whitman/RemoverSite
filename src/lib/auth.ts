@@ -35,3 +35,17 @@ export async function getSession() {
   if (error) throw error
   return data.session
 }
+
+export async function requestPasswordReset(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    // Supabase appends the recovery token to this URL as a hash fragment.
+    // The app picks it up via detectSessionInUrl and fires PASSWORD_RECOVERY.
+    redirectTo: window.location.origin,
+  })
+  if (error) throw error
+}
+
+export async function updatePassword(newPassword: string) {
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) throw error
+}

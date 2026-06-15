@@ -9,6 +9,7 @@ export function App() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [hasConsent, setHasConsent] = useState(false)
+  const [recoveryMode, setRecoveryMode] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,9 +22,17 @@ export function App() {
       }
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       const u = session?.user ?? null
       setUser(u)
+      if (event === 'PASSWORD_RECOVERY') {
+        // User landed via a password reset email link.
+        // Signal the router to redirect to /reset-password.
+        setRecoveryMode(true)
+        setLoading(false)
+        return
+      }
+      setRecoveryMode(false)
       if (u) {
         loadUserData(u.id)
       } else {
@@ -61,7 +70,7 @@ export function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, profile, hasConsent, loading, refreshProfile: () => loadUserData(user?.id ?? '') }}>
+    <AuthContext.Provider value={{ user, profile, hasConsent, recoveryMode, loading, refreshProfile: () => loadUserData(user?.id ?? '') }}>
       <AppRouter />
     </AuthContext.Provider>
   )
