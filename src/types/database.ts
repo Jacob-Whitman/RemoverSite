@@ -142,6 +142,7 @@ export interface BrokerTask {
   failure_reason: string | null
   requires_user_action: boolean
   user_action_type: string | null
+  proxy_email: string | null
   assigned_admin_id: string | null
   notes: string | null
   created_at: string

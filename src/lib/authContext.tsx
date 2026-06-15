@@ -5,11 +5,12 @@ import type { Profile } from '../types/database'
 export interface AuthContextValue {
   user: User | null
   profile: Profile | null
+  hasConsent: boolean
   loading: boolean
   refreshProfile: () => Promise<void>
 }
 
-export const AuthContext = createContext<AuthContextValue>({ user: null, profile: null, loading: true, refreshProfile: async () => {} })
+export const AuthContext = createContext<AuthContextValue>({ user: null, profile: null, hasConsent: false, loading: true, refreshProfile: async () => {} })
 
 export function useAuth() {
   return useContext(AuthContext)

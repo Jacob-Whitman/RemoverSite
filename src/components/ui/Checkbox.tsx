@@ -1,14 +1,14 @@
 import { twMerge } from 'tailwind-merge'
-import type { InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes, ReactNode } from 'react'
 
 interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
-  label: string
+  label: ReactNode
   description?: string
   error?: string
 }
 
 export function Checkbox({ label, description, error, className, id, ...props }: CheckboxProps) {
-  const checkId = id ?? `checkbox-${label.toLowerCase().replace(/\s+/g, '-')}`
+  const checkId = id ?? `checkbox-${Math.random().toString(36).slice(2, 8)}`
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-start gap-3">

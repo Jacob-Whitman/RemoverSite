@@ -212,6 +212,7 @@ serve(async (req: Request) => {
     const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!
     const resendApiKey = Deno.env.get('RESEND_API_KEY') ?? ''
     const fromAddress = Deno.env.get('REMOVAL_EMAIL_FROM') ?? ''
+    const proxyEmailDomain = Deno.env.get('PROXY_EMAIL_DOMAIN') ?? ''
 
     const authHeader = req.headers.get('Authorization') ?? ''
     const serviceClient = createClient(supabaseUrl, serviceRoleKey)
@@ -322,14 +323,31 @@ serve(async (req: Request) => {
         continue
       }
 
+      // Generate a per-task proxy email if the domain is configured and this
+      // broker sends a verification email. The Cloudflare Email Worker will
+      // receive the broker's verification email, click the link, and mark this
+      // task removed — no user action required.
+      const useProxy = broker.requires_email_verification && !!proxyEmailDomain
+      const proxyEmail = useProxy ? `task-${task.id}@${proxyEmailDomain}` : null
+
+      // For email-method brokers: send FROM the proxy address so the broker's
+      // reply lands in our catch-all instead of bouncing or going to the user.
+      // For form-method brokers: override the email field in the submitted form.
+      const effectiveFromAddress = (useProxy && broker.automation_method === 'email')
+        ? proxyEmail!
+        : fromAddress
+      const effectiveProfile: ProfileRow = useProxy
+        ? { ...profile, email: proxyEmail }
+        : profile
+
       // Submit
       let outcome: { success: boolean; error?: string }
       if (broker.automation_method === 'email') {
         outcome = resendApiKey
-          ? await sendOptOutEmail(resendApiKey, fromAddress, broker, profile)
+          ? await sendOptOutEmail(resendApiKey, effectiveFromAddress, broker, effectiveProfile)
           : { success: false, error: 'RESEND_API_KEY not configured' }
       } else if (broker.automation_method === 'form_submit') {
-        outcome = await submitOptOutForm(broker, profile)
+        outcome = await submitOptOutForm(broker, effectiveProfile)
       } else {
         outcome = { success: false, error: `Unknown automation_method: ${broker.automation_method}` }
       }
@@ -338,8 +356,21 @@ serve(async (req: Request) => {
 
       let updatePayload: Record<string, unknown>
       if (outcome.success) {
-        // If the broker sends a confirmation email to the user, they need to act on it
-        if (broker.requires_email_verification) {
+        if (broker.requires_email_verification && useProxy) {
+          // Proxy mode: the Cloudflare Email Worker will receive the verification
+          // email, follow the link, and update this row to 'removed' automatically.
+          updatePayload = {
+            status: 'submitted',
+            submitted_at: now,
+            last_checked_at: now,
+            failure_reason: null,
+            requires_user_action: false,
+            proxy_email: proxyEmail,
+          }
+          if (broker.automation_method === 'email') results.email_sent++
+          else results.form_submitted++
+        } else if (broker.requires_email_verification && !useProxy) {
+          // Fallback: PROXY_EMAIL_DOMAIN not set — user must click the link themselves.
           updatePayload = {
             status: 'waiting_user_action',
             submitted_at: now,
